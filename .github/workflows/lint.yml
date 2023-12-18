@@ -1,0 +1,24 @@
+name: Lint and Formatting
+
+on:
+  push:
+    branches:
+      - '**' # Run on push to all branches
+    tags:
+      - 'v*.*.*' # Run on version tags for publishing
+
+jobs:
+   code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - name: Install ruff
+        run: pip install ruff
+      - name: Lint with ruff
+        run: ruff check src/ tests/
+      - name: Format code with ruff
+        run: ruff format src/ tests/

@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "LogoBgVanisher"
+version = "0.0.1"
+description = "A package to remove (or make transparent) the background from AI-generated logos."
+authors = [{ name = "Dragos Josan", email = "dragosjosan@gmail.com" }]
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+dependencies = [
+    "Pillow",
+    "rembg",
+    "pytest"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[project.scripts]
+logo_bg_vanisher = "main:main"
+
+[tool.ruff]
+src = ["logo_bg_vanisher"]
+fix = true
+show-fixes = true
+show-source = true
+line-length = 120
+ignore-init-module-imports = true
+
+
+[tool.ruff.lint]
+select = [
+    "B",  # flake8-bugbear
+    "E",  # pycodestyle error
+    "F",  # pyflakes
+    "I",  # isort
+    "UP",  # pyupgrade
+    "W",  # pycodestyle warning
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+order-by-type = false
