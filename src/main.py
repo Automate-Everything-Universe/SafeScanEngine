@@ -1,30 +1,8 @@
 """
-Main entry
+Main entry for CLI
 """
 import argparse
 from pathlib import Path
-
-from logo_bg_vanisher.background_remover import BackgroundRemovalStrategy
-from logo_bg_vanisher.cropper import AutoCropper
-from logo_bg_vanisher.cropper import ManualCropper
-from logo_bg_vanisher.folder_utils import find_files
-from logo_bg_vanisher.folder_utils import load_image
-from logo_bg_vanisher.remover_pillow import PillowBackgroundRemoval
-from logo_bg_vanisher.remover_rembg import RembgBackgroundRemoval
-from logo_bg_vanisher.saver import SavePic
-from logo_bg_vanisher.sizer import AspectRatioSizer
-from logo_bg_vanisher.sizer import ManualSizer
-
-
-def extract_remover_type(args):
-    remover: BackgroundRemovalStrategy
-    if args.method == "pillow":
-        remover = PillowBackgroundRemoval(tolerance=50, edge_tolerance=50)
-    elif args.method == "rembgr":
-        remover = RembgBackgroundRemoval()
-    else:
-        raise ValueError("Method must be either 'pillow' or 'rembgr'.")
-    return remover
 
 
 def parse_arguments():
@@ -104,13 +82,6 @@ def main() -> int:
         args = parse_arguments()
         file = Path(args.file) if args.file else None
         folder = Path(args.folder) if args.folder else None
-
-        if folder:
-            pics = find_files(path=folder, extension=('.png', '.jpeg'))
-            for pic in pics:
-                _process_image(pic=pic, user_args=args)
-        elif file:
-            _process_image(pic=file, user_args=args)
 
         if args.verbose:
             print("Done!")

@@ -3,13 +3,13 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "LogoBgVanisher"
+name = "BabySafeScan"
 version = "0.0.1"
-description = "A package to remove (or make transparent) the background from AI-generated logos."
+description = "A package to identify non baby-proof items."
 authors = [{ name = "Dragos Josan", email = "dragosjosan@gmail.com" }]
 license = {file = "LICENSE.txt"}
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,8 +18,7 @@ classifiers = [
 
 
 dependencies = [
-    "Pillow",
-    "rembg",
+    "YOLO",
     "pytest"
 ]
 
@@ -27,14 +26,14 @@ dependencies = [
 package-dir = {"" = "src"}
 
 [project.scripts]
-logo_bg_vanisher = "main:main"
+baby_safe_scan = "main:main"
 
 [tool.ruff]
-src = ["logo_bg_vanisher"]
+src = ["baby_safe_scan"]
 fix = true
 show-fixes = true
 show-source = true
-line-length = 120
+line-length = 100
 ignore-init-module-imports = true
 
 

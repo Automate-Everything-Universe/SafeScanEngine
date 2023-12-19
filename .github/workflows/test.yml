@@ -1,9 +1,9 @@
-name: Python Package
+name:Run tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - '**' # Run on push to all branches
+      - 'main' # Run on pull requests targeting the main branch
     tags:
       - 'v*.*.*' # Run on version tags for publishing
 
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.10'
+          python-version: '3.1x'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
