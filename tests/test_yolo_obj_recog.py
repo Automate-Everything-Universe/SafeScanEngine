@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pytest
-from src.baby_safe_scan.folder_utils import load_image
+from src.resolver.folder_utils import load_image
 
 
 TEST_FOLDER = Path(__file__).parents[0]
