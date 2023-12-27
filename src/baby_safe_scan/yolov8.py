@@ -11,7 +11,7 @@ from src.main import (
     convert_image,
     resize_image
 )
-from src.yolov8_custom import initialize_model
+from src.models.yolov8_model import initialize_model
 
 
 class Yolov8Resolver(Resolver):
