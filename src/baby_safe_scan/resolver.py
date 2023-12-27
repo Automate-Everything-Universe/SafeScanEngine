@@ -3,7 +3,6 @@ Module for Resolver interface
 """
 
 from abc import ABC, abstractmethod
-from typing import List
 
 
 class Resolver(ABC):
