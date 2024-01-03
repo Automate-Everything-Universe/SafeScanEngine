@@ -7,23 +7,26 @@ TEST_FOLDER = Path(__file__).parents[0]
 
 
 @pytest.fixture
-def file() -> Path:
+def img_1() -> Path:
     return TEST_FOLDER / "pic/electrical_outlet.png"
 
+@pytest.fixture
+def img_2() -> Path:
+    return TEST_FOLDER / "pic/electrical_outlet_with_kid.jpg"
+
+
+@pytest.fixture
+def img_3() -> Path:
+    return TEST_FOLDER / "pic/no_found_expected.jpg"
 
 @pytest.fixture
 def input_path() -> Path:
     return TEST_FOLDER / "pic/"
 
 
-@pytest.fixture
-def expected_yollo() -> Path:
-    return TEST_FOLDER / "pic/logo_converted_pillow.png"  # todo: add path with expected result
-
-
-def test_yolovresolver(file):
-    electrical_outlet_resolver = YoloV8Resolver(images=[file])
-    results = electrical_outlet_resolver.process_images()
+def test_yolovresolver(img_1,img_2,img_3):
+    electrical_outlet_resolver = YoloV8Resolver(images=[img_1, img_2, img_3])
+    results = electrical_outlet_resolver.create_json_object()
     print("")
 
     # Check if processed image was created
