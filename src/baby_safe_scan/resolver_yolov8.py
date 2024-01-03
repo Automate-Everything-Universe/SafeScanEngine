@@ -10,14 +10,15 @@ import numpy as np
 import torch
 from PIL import Image
 from PIL.Image import Image as PilImage
+from ultralytics import YOLO
 
 from ultralytics.engine.results import Results, Boxes
 
 from .encoders import Base64Encoder
 from .folder_utils import convert_image, resize_image
+from .model_initializer import YoloV8ModelInitializer, ELECTRICAL_OUTLET_MODEL
+from .model_initializer import ELECTRICAL_OUTLET_MODEL
 from .resolver import Resolver
-
-
 
 
 class ImageProcessor:
@@ -71,7 +72,7 @@ class YoloV8Resolver(Resolver):
 
     def __init__(self, images: List[Any]):
         self.images = ImageProcessor.convert_images_to_pillow(images)
-        self.model = ModelInitializer.initialize_model()
+        self.model = YoloV8ModelInitializer(model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL)
         self.detections = self.process_images()
 
     def process_images(self) -> List[Results]:
