@@ -1,2 +1,6 @@
-YOLO
-pytest
+ultralytics~=8.0.227
+torch
+torchvision
+torchaudio
+pytest~=7.4.3
+Pillow~=10.1.0

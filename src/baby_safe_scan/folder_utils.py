@@ -7,9 +7,10 @@ from typing import List
 from typing import Tuple
 from typing import Union
 
-from PIL.Image import Image
+from PIL.Image import Image as PilImage
 
-from .image_creator import CreatePillowImage
+from logo_bg_vanisher import CreatePillowImage, SavePic
+from logo_bg_vanisher import AspectRatioSizer
 
 
 def find_files(path: Path, extension: Union[str, Tuple, None]) -> List[Path]:
@@ -44,7 +45,7 @@ def validate_path(path: Path) -> bool:
     return True
 
 
-def load_image(picture: Path) -> Union[Image, None]:
+def load_image(picture: Path) -> Union[PilImage, None]:
     try:
         if not picture.exists():
             raise ValueError('The picture could not be found!')
@@ -58,3 +59,43 @@ def load_image(picture: Path) -> Union[Image, None]:
         raise PermissionError(f"Permission error: {exc}") from exc
     except OSError as exc:
         raise OSError(f"Error opening image: {exc}") from exc
+
+
+def convert_images(filepath: Path, delete: bool = False):
+    try:
+        if not filepath.exists():
+            raise FileNotFoundError(f"Path does not : {filepath}")
+        if filepath.is_dir():
+            for file in filepath.iterdir():
+                image = convert_image(file=file)
+                res_image = resize_image(img=image, width=640)  #
+                save_image(img=res_image)
+            if delete:
+                delete_file(filepath)
+        if filepath.is_file():
+            image = convert_image(file=filepath)
+            res_image = resize_image(img=image, width=640)  #
+            save_image(img=res_image)
+    except FileNotFoundError as esc:
+        raise FileNotFoundError("Could not find file") from esc
+
+
+def convert_image(file: Union[str, Path]) -> PilImage:
+    img = CreatePillowImage(file=file)
+    image = img.convert_image()
+    return image
+
+
+def resize_image(img: PilImage, width: int) -> PilImage:
+    resized_image = AspectRatioSizer(img=img, width=width)
+    resized_image = resized_image.set_size()
+    return resized_image
+
+
+def save_image(img: PilImage) -> None:
+    image_saver = SavePic(img=img)
+    image_saver.save_image(suffix="_resized")
+
+
+def delete_file(file: Path) -> None:
+    os.remove(file)

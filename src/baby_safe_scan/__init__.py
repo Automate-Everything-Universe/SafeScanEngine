@@ -1,3 +1,3 @@
 # ruff: noqa: F401
 
-# from .background_remover import BackgroundRemovalStrategy
+from .resolver_yolov8 import YoloV8Resolver
