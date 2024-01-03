@@ -3,15 +3,14 @@ Resolver which uses YoloV8 Model.
 
 """
 import json
-from pathlib import Path
+
 from typing import List, Dict, Any, Union
 
 import numpy as np
 import torch
-import ultralytics
 from PIL import Image
 from PIL.Image import Image as PilImage
-from ultralytics import YOLO
+
 from ultralytics.engine.results import Results, Boxes
 
 from .encoders import Base64Encoder
@@ -19,12 +18,6 @@ from .folder_utils import convert_image, resize_image
 from .resolver import Resolver
 
 
-class ModelInitializer:
-    _model_path = Path(__file__).parents[2] / "models/electrical_outlet_labelstudio.pt"
-
-    @classmethod
-    def initialize_model(cls):
-        return YOLO(cls._model_path)
 
 
 class ImageProcessor:
@@ -82,8 +75,7 @@ class YoloV8Resolver(Resolver):
         self.detections = self.process_images()
 
     def process_images(self) -> List[Results]:
-        model = ModelInitializer.initialize_model()
-        return model(source=self.images, show=False, conf=0.6, save=False, iou=0.4)
+        return self.model(source=self.images, show=False, conf=0.6, save=False, iou=0.4)
 
     def create_json_object(self):
         try:
@@ -107,9 +99,6 @@ class YoloV8Resolver(Resolver):
                     continue
         except Exception as e:
             print(f"Error processing image: {e}")
-
-    def run_model(self, images: List[PilImage]) -> List[Results]:
-        return self.model(source=images, show=False, conf=0.6, save=False, iou=0.4)
 
     @staticmethod
     def detections_is_available(detection: Results) -> bool:
