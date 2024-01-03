@@ -10,6 +10,7 @@ import numpy as np
 import torch
 import ultralytics
 from PIL import Image
+from PIL.Image import Image as PilImage
 from ultralytics import YOLO
 from ultralytics.engine.results import Results, Boxes
 
@@ -28,11 +29,17 @@ class ModelInitializer:
 
 class ImageProcessor:
     @staticmethod
-    def convert_image_to_pillow(img: Image) -> Image:
-        pil_image = convert_image(file=img)
-        if pil_image.width > 640:
-            pil_image = resize_image(img=pil_image, width=640)
-        return pil_image
+    def convert_images_to_pillow(images: List[PilImage]) -> List[PilImage]:
+        processed_images = []
+        for image in images:
+            pil_image = convert_image(file=image)
+            if pil_image.width > 640:
+                pil_image = resize_image(img=pil_image, width=640)
+                processed_images.append(pil_image)
+            else:
+                processed_images.append(pil_image)
+
+        return processed_images
 
     @staticmethod
     def convert_image_to_base64(img: Union[Image.Image, np.ndarray]) -> str:
@@ -46,7 +53,7 @@ class ImageProcessor:
 
 
 class YoloResultSerializer:
-    def __init__(self, detections: List[Dict[str, Any]], labeled_image: str):
+    def __init__(self, detections: Dict[str, Any], labeled_image: str):
         self.detections = detections
         self.labeled_image = labeled_image
 
@@ -70,31 +77,45 @@ class YoloV8Resolver(Resolver):
     """
 
     def __init__(self, images: List[Any]):
-        self.images = images
+        self.images = ImageProcessor.convert_images_to_pillow(images)
         self.model = ModelInitializer.initialize_model()
+        self.detections = self.process_images()
 
-    def process_images(self):
-        processed_data = []
+    def process_images(self) -> List[Results]:
+        model = ModelInitializer.initialize_model()
+        return model(source=self.images, show=False, conf=0.6, save=False, iou=0.4)
+
+    def create_json_object(self):
         try:
-            for image in self.images:
-                pil_image = ImageProcessor.convert_image_to_pillow(img=image)
-                detections = self.run_model(img=pil_image)
-                image_with_detection = self.extract_labeled_image(detections=detections)
-                detections_to_process = self.extract_detections_for_serializer(
-                    detections=detections[0]
-                )
-                image_as_string = ImageProcessor.convert_image_to_base64(
-                    img=image_with_detection
-                )
-                serializer = YoloResultSerializer(detections=detections_to_process, labeled_image=image_as_string)
-                json_data = serializer.to_json()
-                processed_data.append(json_data)
-            return processed_data
+            processed_detections = []
+            for detection in self.detections:
+                if YoloV8Resolver.detections_is_available(detection=detection):
+                    labeled_image = self.extract_labeled_image(detections=detection)
+                    detections_to_process = self.extract_detections_for_serializer(
+                        detections=detection
+                    )
+                    image_as_string = ImageProcessor.convert_image_to_base64(
+                        img=labeled_image
+                    )
+                    serializer = YoloResultSerializer(
+                        detections=detections_to_process, labeled_image=image_as_string
+                    )
+                    json_data = serializer.to_json()
+                    processed_detections.append(json_data)
+                    return processed_detections
+                else:
+                    continue
         except Exception as e:
             print(f"Error processing image: {e}")
 
-    def run_model(self, img):
-        return self.model(source=img, show=False, conf=0.6, save=False, iou=0.4)
+    def run_model(self, images: List[PilImage]) -> List[Results]:
+        return self.model(source=images, show=False, conf=0.6, save=False, iou=0.4)
+
+    @staticmethod
+    def detections_is_available(detection: Results) -> bool:
+        if not detection.boxes.shape[0]:
+            return False
+        return True
 
     @staticmethod
     def extract_labeled_image(detections):
@@ -104,7 +125,7 @@ class YoloV8Resolver(Resolver):
             print(f"Could not extract labeled image: {exc}")
 
     @staticmethod
-    def extract_detections_for_serializer(detections: Results):
+    def extract_detections_for_serializer(detections: Results) -> object:
         try:
             return {
                 "boxes": {
