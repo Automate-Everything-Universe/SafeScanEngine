@@ -14,10 +14,9 @@ from ultralytics import YOLO
 from ultralytics.engine.results import Results, Boxes
 
 from .image_processor import ImageProcessor
-from .model_initializer import YoloV8ModelInitializer, ELECTRICAL_OUTLET_MODEL
+from .model_initializer import YoloV8ModelInitializer
 from .model_initializer import ELECTRICAL_OUTLET_MODEL
 from .resolver import Resolver
-
 
 
 class YoloResultSerializer:
@@ -39,25 +38,29 @@ class YoloResultSerializer:
         return json.dumps(data)
 
 
-class YoloV8Resolver(Resolver):
+class YoloV8Resolver():
     """
     YoloV8 Resolver
     """
 
     def __init__(self, images: List[Any]):
         self.images = ImageProcessor.convert_images_to_pillow(images)
-        self.model = YoloV8ModelInitializer(model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL)
-        self.detections = self.process_images()
-
-    def process_images(self) -> List[Results]:
-        return self.model(source=self.images, show=False, conf=0.6, save=False, iou=0.4)
+        self.model_intializer = YoloV8ModelInitializer(
+            model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL
+        )
+        self.model = self.model_intializer.model
+        self.detections = self.model(
+            source=self.images, show=False, conf=0.6, save=False, iou=0.4
+        )
 
     def create_json_object(self):
         try:
             processed_detections = []
             for detection in self.detections:
                 if YoloV8Resolver.detections_is_available(detection=detection):
-                    labeled_image = ImageProcessor.extract_labeled_image(detections=detection)
+                    labeled_image = ImageProcessor.extract_labeled_image(
+                        detections=detection
+                    )
                     detections_to_process = self.extract_detections_for_serializer(
                         detections=detection
                     )

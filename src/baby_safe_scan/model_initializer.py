@@ -18,7 +18,6 @@ class ModelInitializer(ABC):
         self.model_path = model_path
 
     @abstractmethod
-    @property
     def model(self):
         """
         Returns the initialized model
