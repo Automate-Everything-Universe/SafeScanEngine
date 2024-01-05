@@ -6,8 +6,6 @@ from abc import ABC, abstractmethod
 
 
 class Resolver(ABC):
-    __slots__ = ['images']
-
     @abstractmethod
-    def process_images(self):
+    def create_json_object(self):
         pass
