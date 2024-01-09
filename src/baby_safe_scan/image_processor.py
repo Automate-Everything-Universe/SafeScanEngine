@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List, Union
 
 import numpy as np
@@ -6,21 +7,16 @@ from PIL.Image import Image as PilImage
 from ultralytics.engine.results import Results
 
 from .encoders import Base64Encoder
-from .folder_utils import convert_image, resize_image
+from .folder_utils import convert_image
 
 
 class ImageProcessor:
     @staticmethod
-    def convert_images_to_pillow(images: List[PilImage]) -> List[PilImage]:
+    def convert_images_to_pillow(images: List[Union[Path, str]]) -> List[PilImage]:
         processed_images = []
         for image in images:
             pil_image = convert_image(file=image)
-            if pil_image.width > 640:
-                pil_image = resize_image(img=pil_image, width=640)
-                processed_images.append(pil_image)
-            else:
-                processed_images.append(pil_image)
-
+            processed_images.append(pil_image)
         return processed_images
 
     @staticmethod
