@@ -5,3 +5,4 @@ torchaudio
 pytest>=7.4.3
 Pillow>=10.1.0
 numpy>=1.26.2
+pillow_heif
