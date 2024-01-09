@@ -38,7 +38,7 @@ class YoloResultSerializer:
         return json.dumps(data)
 
 
-class YoloV8Resolver():
+class YoloV8Resolver:
     """
     YoloV8 Resolver
     """
