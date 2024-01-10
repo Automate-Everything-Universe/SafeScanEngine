@@ -23,5 +23,5 @@ def input_path() -> Path:
 
 def test_yolovresolver(img_1, img_2):
     electrical_outlet_resolver = YoloV8Resolver(images=[img_1, img_2])
-    results = electrical_outlet_resolver.create_json_object()
+    results = electrical_outlet_resolver.return_detections()
     assert len(results) >= 1, "No result was extracted"
