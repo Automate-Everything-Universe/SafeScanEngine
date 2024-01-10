@@ -13,15 +13,6 @@ class Base64Encoder:
 
     @staticmethod
     def encode_image_to_base64(img: Image) -> str:
-        """
-        Encodes an image to a Base64 string.
-
-        Args:
-        - image_path (Path): The path to the image file to be encoded.
-
-        Returns:
-        - str: The Base64 encoded string representation of the image.
-        """
         # Open the image file and convert it to binary data
         buffered = io.BytesIO()
         img.save(buffered, format="png")

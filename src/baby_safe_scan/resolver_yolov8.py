@@ -35,7 +35,8 @@ class YoloResultSerializer:
             "detections": self.detections,
             "labeled_image": f"data:image/jpeg;base64,{self.labeled_image}",
         }
-        return json.dumps(data)
+        # return json.dumps(data)
+        return data
 
 
 class YoloV8Resolver:
@@ -53,39 +54,39 @@ class YoloV8Resolver:
             source=self.images, show=False, conf=0.6, save=False, iou=0.4
         )
 
-    def create_json_object(self):
+    def return_detections(self):
         try:
             processed_detections = []
+            if not self.detections:
+                raise ValueError("No detections found")
             for detection in self.detections:
-                if YoloV8Resolver.detections_is_available(detection=detection):
+                if not YoloV8Resolver.detections_are_available(detection=detection):
+                    continue  # todo: implement feature where the same image is returned
+                    # and inform the user that nothing was detected
+                else:
                     labeled_image = ImageProcessor.extract_labeled_image(
                         detections=detection
                     )
-                    detections_to_process = self.extract_detections_for_serializer(
+                    detections_to_process = self.extract_detections_metadata(
                         detections=detection
                     )
-                    image_as_string = ImageProcessor.convert_image_to_base64(
+                    encoded_image = ImageProcessor.encode_image_base64(
                         img=labeled_image
                     )
-                    serializer = YoloResultSerializer(
-                        detections=detections_to_process, labeled_image=image_as_string
-                    )
-                    json_data = serializer.to_json()
-                    processed_detections.append(json_data)
-                    return processed_detections
-                else:
-                    continue
+                    detections_to_return = {**detections_to_process, **encoded_image}
+                    processed_detections.append(detections_to_return)
+            return processed_detections
         except Exception as e:
             print(f"Error processing image: {e}")
 
     @staticmethod
-    def detections_is_available(detection: Results) -> bool:
+    def detections_are_available(detection: Results) -> bool:
         if not detection.boxes.shape[0]:
             return False
         return True
 
     @staticmethod
-    def extract_detections_for_serializer(detections: Results) -> object:
+    def extract_detections_metadata(detections: Results) -> Dict[str, str]:
         try:
             return {
                 "boxes": {
@@ -122,7 +123,12 @@ class YoloV8Resolver:
             if not YoloV8Resolver.is_object_json_serializable(obj):
                 if isinstance(obj, (torch.Tensor, np.ndarray)):
                     return obj.tolist()
-            return obj
+            elif isinstance(obj, tuple):
+                return list(obj)
+            elif isinstance(obj, dict):
+                return obj
+            else:
+                print(f"fObject type not handled: {type(obj)}")
         except TypeError as exc:
             raise TypeError(f"Object is not JSON serializable: {obj}") from exc
 
@@ -134,3 +140,7 @@ class YoloV8Resolver:
         except TypeError as exc:
             print("Not JSON serializable:", exc)
             return False
+
+    @staticmethod
+    def gather_detections(**kwargs) -> Dict:
+        return {k: v for k, v in kwargs}
