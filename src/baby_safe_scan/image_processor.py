@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Dict
 
 import numpy as np
 from PIL import Image
@@ -20,14 +20,15 @@ class ImageProcessor:
         return processed_images
 
     @staticmethod
-    def convert_image_to_base64(img: Union[Image.Image, np.ndarray]) -> str:
-        """
-        Encodes a Pillow Image or a Numpy array into an ASCII string
-        """
-        if isinstance(img, np.ndarray):
+    def encode_image_base64(img: Union[Image.Image, np.ndarray]) -> Dict[str, str]:
+        if not isinstance(img, (np.ndarray, Image.Image)):
+            raise ValueError(f"Wrong data type used for base64 image encoding: {type(img)}")
+        elif isinstance(img, np.ndarray):
             img = Image.fromarray(img, "RGB")
-        encoded_image = Base64Encoder.encode_image_to_base64(img=img)
-        return encoded_image
+            encoded_image = Base64Encoder.encode_image_to_base64(img=img)
+        else:
+            encoded_image = Base64Encoder.encode_image_to_base64(img=img)
+        return {"encoded_image": encoded_image}
 
     @staticmethod
     def extract_labeled_image(detections: Results) -> PilImage:
