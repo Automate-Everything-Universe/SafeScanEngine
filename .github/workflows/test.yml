@@ -25,7 +25,7 @@ jobs:
           pip install pytest
       - name: Check for model file
         run: |
-          if [ -f "SafeScanEngine/models/electrical_outlet_labelstudio.pt" ]; then
+          if [ -f "models/electrical_outlet_labelstudio.pt" ]; then
           echo "Model file exists."
           else
           echo "Model file does not exist."
