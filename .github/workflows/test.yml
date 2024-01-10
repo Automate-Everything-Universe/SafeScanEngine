@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          lfs: true # Ensure Git LFS is initialized
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -21,5 +23,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
+      - name: Check for model file
+        run: |
+          if [ -f "models/electrical_outlet_labelstudio.pt" ]; then
+          echo "Model file exists."
+          else
+          echo "Model file does not exist."
+          exit 1
+          fi
       - name: Run tests
         run: pytest
