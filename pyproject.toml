@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "BabySafeScan"
-version = "0.0.1"
+version = "0.1.0"
 description = "A package to identify non baby-proof items."
 authors = [{ name = "Dragos Josan", email = "dragosjosan@gmail.com" }]
 license = {file = "LICENSE.txt"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -19,14 +19,15 @@ classifiers = [
 
 dependencies = [
     "YOLO",
-    "pytest"
+    "pytest",
+    "ultralytics",
+    "Pillow",
+    "pillow_heif"
 ]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
-[project.scripts]
-baby_safe_scan = "main:main"
 
 [tool.ruff]
 src = ["baby_safe_scan"]
