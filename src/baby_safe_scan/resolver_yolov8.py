@@ -30,7 +30,7 @@ class YoloV8Resolver:
         )
         self.model = self.model_intializer.model
         self.detections = self.model(
-            source=self.images, show=False, conf=0.6, save=False, iou=0.4
+            source=self.images, show=False, conf=0.7, save=False, iou=0.4
         )
 
     def return_detections(self):
