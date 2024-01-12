@@ -7,3 +7,4 @@
 /tests/.pytest_cache/
 /examples/
 /models/
+/.ruff_cache/
