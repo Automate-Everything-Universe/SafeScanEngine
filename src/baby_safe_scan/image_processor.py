@@ -1,5 +1,7 @@
 from pathlib import Path
-from typing import List, Union, Dict
+from typing import Dict
+from typing import List
+from typing import Union
 
 import numpy as np
 from PIL import Image

@@ -3,40 +3,18 @@ Resolver which uses YoloV8 Model.
 
 """
 import json
-
-from typing import List, Dict, Any, Union
+from typing import Any
+from typing import Dict
+from typing import List
 
 import numpy as np
 import torch
-
 from ultralytics import YOLO
-
-from ultralytics.engine.results import Results, Boxes
+from ultralytics.engine.results import Results
 
 from .image_processor import ImageProcessor
-from .model_initializer import YoloV8ModelInitializer
 from .model_initializer import ELECTRICAL_OUTLET_MODEL
-from .resolver import Resolver
-
-
-class YoloResultSerializer:
-    def __init__(self, detections: Dict[str, Any], labeled_image: str):
-        self.detections = detections
-        self.labeled_image = labeled_image
-
-    def to_json(self) -> str:
-        """
-        Converts the YOLO model results to a JSON-serializable format.
-
-        Returns:
-        - str: A JSON string representing the model results.
-        """
-        data = {
-            "detections": self.detections,
-            "labeled_image": f"data:image/jpeg;base64,{self.labeled_image}",
-        }
-        # return json.dumps(data)
-        return data
+from .model_initializer import YoloV8ModelInitializer
 
 
 class YoloV8Resolver:
@@ -50,37 +28,35 @@ class YoloV8Resolver:
             model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL
         )
         self.model = self.model_intializer.model
-        self.detections = self.model(
-            source=self.images, show=False, conf=0.6, save=False, iou=0.4
-        )
+        self.detections = self.model(source=self.images, show=False, conf=0.7, save=False, iou=0.4)
 
     def return_detections(self):
         try:
             processed_detections = []
-            if not self.detections:
-                raise ValueError("No detections found")
             for detection in self.detections:
-                if not YoloV8Resolver.detections_are_available(detection=detection):
-                    continue  # todo: implement feature where the same image is returned
-                    # and inform the user that nothing was detected
+                if not YoloV8Resolver.is_danger_found(detection=detection):
+                    danger_found = {"danger_found": False}
+                    processed_detections.append(danger_found)
                 else:
-                    labeled_image = ImageProcessor.extract_labeled_image(
-                        detections=detection
-                    )
-                    detections_to_process = self.extract_detections_metadata(
-                        detections=detection
-                    )
-                    encoded_image = ImageProcessor.encode_image_base64(
-                        img=labeled_image
-                    )
-                    detections_to_return = {**detections_to_process, **encoded_image}
+                    danger_found = {"danger_found": True}
+                    labeled_image = ImageProcessor.extract_labeled_image(detections=detection)
+                    detections_to_process = self.extract_detections_metadata(detections=detection)
+                    encoded_image = ImageProcessor.encode_image_base64(img=labeled_image)
+                    detections_to_return = {
+                        **detections_to_process,
+                        **encoded_image,
+                        **danger_found,
+                    }
                     processed_detections.append(detections_to_return)
             return processed_detections
         except Exception as e:
             print(f"Error processing image: {e}")
 
     @staticmethod
-    def detections_are_available(detection: Results) -> bool:
+    def is_danger_found(detection: Results) -> bool:
+        """
+        If no Yolo detections boxes were found, return false
+        """
         if not detection.boxes.shape[0]:
             return False
         return True

@@ -1,15 +1,15 @@
 """
 Module for different models
 """
-from abc import ABC, abstractproperty, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Type
+from typing import Any
+from typing import Type
 
 from ultralytics import YOLO
 
-ELECTRICAL_OUTLET_MODEL = (
-    Path(__file__).parents[2] / "models/electrical_outlet_labelstudio.pt"
-)
+ELECTRICAL_OUTLET_MODEL = Path(__file__).parents[2] / "models/electrical_outlet_labelstudio.pt"
 
 
 class ModelInitializer(ABC):

@@ -1,7 +1,6 @@
 """
 Module to handle file operations
 """
-import os
 from pathlib import Path
 from typing import List
 from typing import Tuple
@@ -9,7 +8,6 @@ from typing import Union
 
 from PIL import Image
 from PIL.Image import Image as PilImage
-
 from pillow_heif import register_heif_opener
 
 
@@ -64,4 +62,4 @@ def convert_image(file: Union[str, Path]) -> PilImage:
     except OSError as exc:
         raise OSError(f"Error occurred while opening file {file}") from exc
     except Exception as exc:
-        raise Exception(f"Unexpected error occurred when opening the image") from exc
+        raise Exception("Unexpected error occurred when opening the image") from exc
