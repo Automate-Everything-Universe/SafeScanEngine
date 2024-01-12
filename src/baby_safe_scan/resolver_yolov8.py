@@ -36,13 +36,12 @@ class YoloV8Resolver:
     def return_detections(self):
         try:
             processed_detections = []
-            if not self.detections:
-                raise ValueError("No detections found")
             for detection in self.detections:
-                if not YoloV8Resolver.detections_are_available(detection=detection):
-                    continue  # todo: implement feature where the same image is returned
-                    # and inform the user that nothing was detected
+                if not YoloV8Resolver.is_danger_found(detection=detection):
+                    danger_found = {"danger_found": False}
+                    processed_detections.append(danger_found)
                 else:
+                    danger_found = {"danger_found": True}
                     labeled_image = ImageProcessor.extract_labeled_image(
                         detections=detection
                     )
@@ -59,7 +58,10 @@ class YoloV8Resolver:
             print(f"Error processing image: {e}")
 
     @staticmethod
-    def detections_are_available(detection: Results) -> bool:
+    def is_danger_found(detection: Results) -> bool:
+        """
+        If no Yolo detections boxes were found, return false
+        """
         if not detection.boxes.shape[0]:
             return False
         return True
