@@ -3,19 +3,18 @@ Resolver which uses YoloV8 Model.
 
 """
 import json
-
-from typing import List, Dict, Any, Union
+from typing import Any
+from typing import Dict
+from typing import List
 
 import numpy as np
 import torch
-
 from ultralytics import YOLO
-
-from ultralytics.engine.results import Results, Boxes
+from ultralytics.engine.results import Results
 
 from .image_processor import ImageProcessor
-from .model_initializer import YoloV8ModelInitializer
 from .model_initializer import ELECTRICAL_OUTLET_MODEL
+from .model_initializer import YoloV8ModelInitializer
 
 
 class YoloV8Resolver:
@@ -29,9 +28,7 @@ class YoloV8Resolver:
             model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL
         )
         self.model = self.model_intializer.model
-        self.detections = self.model(
-            source=self.images, show=False, conf=0.7, save=False, iou=0.4
-        )
+        self.detections = self.model(source=self.images, show=False, conf=0.7, save=False, iou=0.4)
 
     def return_detections(self):
         try:
@@ -42,16 +39,14 @@ class YoloV8Resolver:
                     processed_detections.append(danger_found)
                 else:
                     danger_found = {"danger_found": True}
-                    labeled_image = ImageProcessor.extract_labeled_image(
-                        detections=detection
-                    )
-                    detections_to_process = self.extract_detections_metadata(
-                        detections=detection
-                    )
-                    encoded_image = ImageProcessor.encode_image_base64(
-                        img=labeled_image
-                    )
-                    detections_to_return = {**detections_to_process, **encoded_image, **danger_found}
+                    labeled_image = ImageProcessor.extract_labeled_image(detections=detection)
+                    detections_to_process = self.extract_detections_metadata(detections=detection)
+                    encoded_image = ImageProcessor.encode_image_base64(img=labeled_image)
+                    detections_to_return = {
+                        **detections_to_process,
+                        **encoded_image,
+                        **danger_found,
+                    }
                     processed_detections.append(detections_to_return)
             return processed_detections
         except Exception as e:

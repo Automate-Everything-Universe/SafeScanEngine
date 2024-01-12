@@ -1,4 +1,4 @@
-# BabySafeScan
+# 
 BabySafeScan is a Python Library designed for identifying non baby-proof from a picture. 
 It utilizes the popular library YOLO.
 

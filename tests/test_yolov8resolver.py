@@ -1,6 +1,6 @@
-import pytest
 from pathlib import Path
 
+import pytest
 from src.baby_safe_scan import YoloV8Resolver
 
 TEST_FOLDER = Path(__file__).parents[0]
@@ -19,6 +19,7 @@ def img_2() -> Path:
 @pytest.fixture
 def img_no_danger() -> Path:
     return TEST_FOLDER / "pic/empty_living_room.jpeg"
+
 
 @pytest.fixture
 def input_path() -> Path:
