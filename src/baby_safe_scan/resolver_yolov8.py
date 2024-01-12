@@ -16,27 +16,6 @@ from ultralytics.engine.results import Results, Boxes
 from .image_processor import ImageProcessor
 from .model_initializer import YoloV8ModelInitializer
 from .model_initializer import ELECTRICAL_OUTLET_MODEL
-from .resolver import Resolver
-
-
-class YoloResultSerializer:
-    def __init__(self, detections: Dict[str, Any], labeled_image: str):
-        self.detections = detections
-        self.labeled_image = labeled_image
-
-    def to_json(self) -> str:
-        """
-        Converts the YOLO model results to a JSON-serializable format.
-
-        Returns:
-        - str: A JSON string representing the model results.
-        """
-        data = {
-            "detections": self.detections,
-            "labeled_image": f"data:image/jpeg;base64,{self.labeled_image}",
-        }
-        # return json.dumps(data)
-        return data
 
 
 class YoloV8Resolver:
@@ -73,7 +52,7 @@ class YoloV8Resolver:
                     encoded_image = ImageProcessor.encode_image_base64(
                         img=labeled_image
                     )
-                    detections_to_return = {**detections_to_process, **encoded_image}
+                    detections_to_return = {**detections_to_process, **encoded_image, **danger_found}
                     processed_detections.append(detections_to_return)
             return processed_detections
         except Exception as e:
