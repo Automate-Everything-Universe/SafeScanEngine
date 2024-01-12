@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "BabySafeScan"
+name = "SafeScanEngine"
 version = "0.1.0"
-description = "A package to identify non baby-proof items."
+description = "A package to identify dangerous non baby-proof items."
 authors = [{ name = "Dragos Josan", email = "dragosjosan@gmail.com" }]
 license = {file = "LICENSE.txt"}
 readme = "README.md"
@@ -15,7 +15,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
 
 dependencies = [
     "YOLO",
@@ -36,7 +35,6 @@ show-fixes = true
 show-source = true
 line-length = 100
 ignore-init-module-imports = true
-
 
 [tool.ruff.lint]
 select = [
