@@ -7,7 +7,7 @@ name = "SafeScanEngine"
 version = "0.1.0"
 description = "A package to identify dangerous non baby-proof items."
 authors = [{ name = "Dragos Josan", email = "dragosjosan@gmail.com" }]
-license = {file = "LICENSE.txt"}
+license = { file = "LICENSE.txt" }
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 
 
 [tool.ruff]
@@ -38,12 +38,16 @@ ignore-init-module-imports = true
 
 [tool.ruff.lint]
 select = [
-    "B",  # flake8-bugbear
-    "E",  # pycodestyle error
-    "F",  # pyflakes
-    "I",  # isort
-    "UP",  # pyupgrade
-    "W",  # pycodestyle warning
+    "A", # flake8-builtins
+    "B", # flake8-bugbear
+    "E", # pycodestyle error
+    "W", # pycodestyle warning
+    "F", # pyflakes
+    "I", # isort
+    "UP", # pyupgrade
+    "PLC", # Pylint
+    "PLE", # Pylint
+    "PLW" # Pylint
 ]
 
 [tool.ruff.lint.isort]
