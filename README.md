@@ -29,8 +29,8 @@ pip install SafeScanEngine
 ```shell
 from SafeScanEngine import YoloV8Resolver
 
-electrical_outlet_resolver = YoloV8Resolver(images=["img_1.jpg", "img_no_danger.jpg", "img_2.jpg"])
-results = electrical_outlet_resolver.return_detections()
+model = YoloV8Resolver(images=["img_1.jpg", "img_no_danger.jpg", "img_2.jpg"])
+results = model.return_detections()
 
 # Process results list
 for result in results:
