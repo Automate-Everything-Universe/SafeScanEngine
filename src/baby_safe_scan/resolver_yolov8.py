@@ -15,9 +15,10 @@ from ultralytics.engine.results import Results
 from .image_processor import ImageProcessor
 from .model_initializer import ELECTRICAL_OUTLET_MODEL
 from .model_initializer import YoloV8ModelInitializer
+from .resolver import Resolver
 
 
-class YoloV8Resolver:
+class YoloV8Resolver(Resolver):
     """
     YoloV8 Resolver
     """
