@@ -13,7 +13,7 @@ For the time being, YoloV8 was implemented
 - Cables/cords of any kind (to be implemented)
 
 ### Non-lethal:
-- Sharp corners
+- Sharp corners (to be implemented)
 
 ## Requirements
 - Python 3.7 or higher
