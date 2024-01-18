@@ -27,7 +27,7 @@ pip install SafeScanEngine
 
 ## Usage
 ```shell
-from SafeScanEngine import YoloV8Resolver
+from safe_scan_engine import YoloV8Resolver
 
 model = YoloV8Resolver(images=["img_1.jpg", "img_no_danger.jpg", "img_2.jpg"])
 results = model.return_detections()
