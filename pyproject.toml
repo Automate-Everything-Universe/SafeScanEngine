@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=42", "wheel", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -26,7 +26,13 @@ dependencies = [
 
 [tool.setuptools]
 package-dir = { "" = "src" }
+include-package-data = true  # default is true
 
+[tool.setuptools.packages.find]
+where = ["models"]
+
+[tool.setuptools.package-data]
+mypkg = ["electrical_outlet_labelstudio.pt"]
 
 [tool.ruff]
 src = ["baby_safe_scan"]
