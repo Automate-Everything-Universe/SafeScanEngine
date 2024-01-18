@@ -8,5 +8,5 @@ from abc import abstractmethod
 
 class Resolver(ABC):
     @abstractmethod
-    def create_json_object(self):
+    def return_detections(self):
         pass

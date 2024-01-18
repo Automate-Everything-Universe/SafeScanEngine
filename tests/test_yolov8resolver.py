@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from src.baby_safe_scan import YoloV8Resolver
+from src.safe_scan_engine import YoloV8Resolver
 
 TEST_FOLDER = Path(__file__).parents[0]
 

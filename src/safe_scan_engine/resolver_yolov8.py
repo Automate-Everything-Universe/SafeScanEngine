@@ -13,11 +13,12 @@ from ultralytics import YOLO
 from ultralytics.engine.results import Results
 
 from .image_processor import ImageProcessor
-from .model_initializer import ELECTRICAL_OUTLET_MODEL
+from .model_initializer import MODEL
 from .model_initializer import YoloV8ModelInitializer
+from .resolver import Resolver
 
 
-class YoloV8Resolver:
+class YoloV8Resolver(Resolver):
     """
     YoloV8 Resolver
     """
@@ -25,7 +26,7 @@ class YoloV8Resolver:
     def __init__(self, images: List[Any]):
         self.images = ImageProcessor.convert_images_to_pillow(images)
         self.model_intializer = YoloV8ModelInitializer(
-            model_type=YOLO, model_path=ELECTRICAL_OUTLET_MODEL
+            model_type=YOLO, model_path=MODEL
         )
         self.model = self.model_intializer.model
         self.detections = self.model(source=self.images, show=False, conf=0.7, save=False, iou=0.4)

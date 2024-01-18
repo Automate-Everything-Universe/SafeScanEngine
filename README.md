@@ -13,7 +13,7 @@ For the time being, YoloV8 was implemented
 - Cables/cords of any kind (to be implemented)
 
 ### Non-lethal:
-- Sharp corners
+- Sharp corners (to be implemented)
 
 ## Requirements
 - Python 3.7 or higher
@@ -27,10 +27,10 @@ pip install SafeScanEngine
 
 ## Usage
 ```shell
-from SafeScanEngine import YoloV8Resolver
+from safe_scan_engine import YoloV8Resolver
 
-electrical_outlet_resolver = YoloV8Resolver(images=["img_1.jpg", "img_no_danger.jpg", "img_2.jpg"])
-results = electrical_outlet_resolver.return_detections()
+model = YoloV8Resolver(images=["img_1.jpg", "img_no_danger.jpg", "img_2.jpg"])
+results = model.return_detections()
 
 # Process results list
 for result in results:
